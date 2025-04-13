@@ -1,0 +1,377 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+      "title": "",
+      "version": ""
+    },
+    "paths": {
+      "/api/v1/profile/get-share": {
+        "get": {
+          "operationId": "listget_shares",
+          "description": "",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {}
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "api"
+          ]
+        }
+      },
+      "/api/v1/users/register": {
+        "post": {
+          "operationId": "createregister",
+          "description": "",
+          "parameters": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {}
+              },
+              "multipart/form-data": {
+                "schema": {}
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "api"
+          ]
+        }
+      },
+      "/api/v1/profile/add-credential": {
+        "post": {
+          "operationId": "createadd_credential",
+          "description": "",
+          "parameters": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {}
+              },
+              "multipart/form-data": {
+                "schema": {}
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "api"
+          ]
+        }
+      },
+      "/api/v1/profile/share-create": {
+        "post": {
+          "operationId": "createshare_create",
+          "description": "",
+          "parameters": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {}
+              },
+              "multipart/form-data": {
+                "schema": {}
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "api"
+          ]
+        }
+      },
+      "/api/v1/profile/emergency-access": {
+        "post": {
+          "operationId": "createemergency_access",
+          "description": "",
+          "parameters": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {}
+              },
+              "multipart/form-data": {
+                "schema": {}
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "api"
+          ]
+        }
+      },
+      "/api/v1/profile/emergency-access/grant": {
+        "post": {
+          "operationId": "createemergency_access_grant",
+          "description": "",
+          "parameters": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {}
+              },
+              "multipart/form-data": {
+                "schema": {}
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "api"
+          ]
+        }
+      },
+      "/api/v1/profile/privilege-rings": {
+        "post": {
+          "operationId": "createprivilege_rings",
+          "description": "",
+          "parameters": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {}
+              },
+              "multipart/form-data": {
+                "schema": {}
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "api"
+          ]
+        }
+      },
+      "/api/v1/profile/update-info": {
+        "post": {
+          "operationId": "createupdate_info",
+          "description": "",
+          "parameters": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {}
+              },
+              "multipart/form-data": {
+                "schema": {}
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "api"
+          ]
+        }
+      },
+      "/api/v1/profile/share-create-link": {
+        "post": {
+          "operationId": "createshare_create_link",
+          "description": "",
+          "parameters": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {}
+              },
+              "multipart/form-data": {
+                "schema": {}
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "api"
+          ]
+        }
+      },
+      "/api/v1/profile/public": {
+        "post": {
+          "operationId": "createpublic",
+          "description": "",
+          "parameters": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {}
+              },
+              "multipart/form-data": {
+                "schema": {}
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "api"
+          ]
+        }
+      },
+      "/api/v1/profile/export": {
+        "post": {
+          "operationId": "createexport",
+          "description": "",
+          "parameters": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {}
+              },
+              "multipart/form-data": {
+                "schema": {}
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "api"
+          ]
+        }
+      },
+      "/api/v1/profile/revoke-access": {
+        "delete": {
+          "operationId": "destroyrevoke_access",
+          "description": "",
+          "parameters": [],
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "api"
+          ]
+        }
+      }
+    }
+  }

@@ -9,7 +9,7 @@ def email():
 
 @pytest.fixture(scope='session')
 def token(email):
-    return requests.post(f'{URL}/users/register', data={"name":"n","handle":"h","email":email,"password":"p","biometrics":"b","public_private_key_pair":"p"}).json()['token']
+    return requests.post(f'{URL}/users/register', data={"name":"n","handle":"h","email":email,"password":"Test1234##","biometrics":"b","public_private_key_pair":"p"}).json()['token']
 
 @pytest.fixture(scope='session')
 def vtoken(token):
@@ -17,17 +17,17 @@ def vtoken(token):
 
 class TestRegister():
     def test_without_email(self):
-        res = requests.post(f'{URL}/users/register', data={"name":"n","handle":"h","password":"p","biometrics":"b","public_private_key_pair":"p"}).json()
+        res = requests.post(f'{URL}/users/register', data={"name":"n","handle":"h","password":"Test1234##","biometrics":"b","public_private_key_pair":"p"}).json()
         assert res['status'] == 'email and password must exist!'
     def test_without_password(self):
         res = requests.post(f'{URL}/users/register', data={"name":"n","handle":"h","email":"e@g.com","biometrics":"b","public_private_key_pair":"p"}).json()
         assert res['status'] == 'email and password must exist!'
     def test_email_exists(self):
-        requests.post(f'{URL}/users/register', data={"name":"n","handle":"h","email":"test@g.com","password":"p","biometrics":"b","public_private_key_pair":"p"})
-        res = requests.post(f'{URL}/users/register', data={"name":"n","handle":"h","email":"test@g.com","password":"p","biometrics":"b","public_private_key_pair":"p"}).json()
+        requests.post(f'{URL}/users/register', data={"name":"n","handle":"h","email":"test@g.com","password":"Test1234##","biometrics":"b","public_private_key_pair":"p"})
+        res = requests.post(f'{URL}/users/register', data={"name":"n","handle":"h","email":"test@g.com","password":"Test1234##","biometrics":"b","public_private_key_pair":"p"}).json()
         assert res['status'] == 'the email exists!'
     def test_register(self):
-        res = requests.post(f'{URL}/users/register', data={"name":"n","handle":"h","email":f"test_{int(time.time()*1000)}@g.com","password":"p","biometrics":"b","public_private_key_pair":"p"}).json()
+        res = requests.post(f'{URL}/users/register', data={"name":"n","handle":"h","email":f"test_{int(time.time()*1000)}@g.com","password":"Test1234##","biometrics":"b","public_private_key_pair":"p"}).json()
         assert res['status'] == 'success'
 
 class TestCredential():
@@ -101,7 +101,7 @@ class TestEmergencyAccessGrant():
         assert res['status'] == 'email must exist!'
     def test_access_not_set(self):
         email = f"test_{int(time.time()*1000)+1}@g.com"
-        requests.post(f'{URL}/users/register', data={"name":"n","handle":"h","email":email,"password":"p","biometrics":"b","public_private_key_pair":"p"})
+        requests.post(f'{URL}/users/register', data={"name":"n","handle":"h","email":email,"password":"Test1234##","biometrics":"b","public_private_key_pair":"p"})
         res = requests.post(f'{URL}/profile/emergency-access/grant', data={"responder_id":"r","reason":"r","email":email}).json()
         assert res['status'] == 'this user hasn’t set emergency access!'
 
