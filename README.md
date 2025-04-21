@@ -595,7 +595,7 @@ app_exportlogs
 ```json
 {
     "status": 404,
-    "message": "email or password is incorrect!",
+    "message": "email or password is incorrect!"
 }
 ```
 
@@ -603,7 +603,7 @@ app_exportlogs
 ```json
 {
     "status": 404,
-    "message": "email and passowrd must exist!",
+    "message": "email and passowrd must exist!"
 }
 ```
 
