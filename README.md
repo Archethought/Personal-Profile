@@ -552,3 +552,110 @@ POST http://127.0.0.1:8000/api/v1/profile/export
 app_exportlogs  
 
 ![case19](https://github.com/user-attachments/assets/70037f78-7e34-4c98-8761-984bd4973082)
+
+# API 12 
+**User Case 20: Token Update / Refresh**  
+**Actor:** Returning User or User Logging in  
+**Description:** A returning or first time login user requests a new session token by providing valid login credentials (email and password). The system verifies the user and returns a refreshed token for continued secure access.
+
+**Steps:**  
+1. User opens the app and navigates to personal profile.  
+2. User provides their email and password.  
+3. The system verifies the user credentials.  
+4. If valid, the system generates a new token and updates it in the database.  
+5. The new token is returned to the user in the response.
+
+---
+
+**request params:**  
+○ `email`: String (User's registered email)  
+○ `password`: String (User's account password – must match the hashed value in DB)
+
+**respond params:**  
+○ `token`: String (Newly generated session token)  
+○ `status`: Integer (HTTP status code)  
+○ `message`: String (Confirmation message or error)
+
+**request：**  
+`POST http://127.0.0.1:8000/api/v1/users/update_token`  
+
+![image](https://github.com/user-attachments/assets/e96412cb-78c7-47c0-82e6-a7c61ab1beed)
+
+**respond：**  
+○ success：  
+```json
+{
+    "status": 200,
+    "message": "Token updated successfully!",
+    "token": "4e538f06e2a41904191801c3854d7c7c328735c5176f7020f7df52338c2ac669"
+}
+```
+
+○ fail (invalid credentials)：  
+```json
+{
+    "status": 404.
+    "message": "Email or Password is wrong",
+}
+```
+
+○ fail (missing params)：  
+```json
+{
+    "status": 404.
+    "message": "Email and Passowrd must exist",
+}
+```
+
+# API 13
+**User Case 21: Check User Status**  
+**Actor:** Registered User  
+**Description:** A user queries their current status in the system by providing their email. The system checks if the user exists and returns status-related details such as token validity, last activity, or account state.
+
+**Steps:**  
+1. User opens the app and logins normally into the rsp app.  
+2. User submits their credentials.
+3. The system verifies if the email exists.  
+4. If found, the system returns relevant user status information.  
+5. If not found, the system returns an appropriate error message.
+
+**request params:**  
+○ `email`: String (Registered user email)
+
+**respond params:**  
+○ `status`: Integer (HTTP status code)  
+○ `message`: String (Success or error message)
+
+**request：**  
+`POST http://127.0.0.1:8000/api/v1/users/status`  
+
+![image](https://github.com/user-attachments/assets/7172852f-4620-443e-bb91-9f3d004e7d9a)
+
+**respond：**  
+○ success：  
+```json
+{
+    "status": 200,
+    "message": "User found",
+    "user_status": {
+        "is_active": true,
+        "last_login": "2025-04-20T16:30:00Z",
+        "token_valid": true
+    }
+}
+```
+
+○ fail (email not found)：  
+```json
+{
+    "status": 404,
+    "message": "User not found"
+}
+```
+
+○ fail (missing email)：  
+```json
+{
+    "status": 400,
+    "message": "Email is required"
+}
