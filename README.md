@@ -594,16 +594,16 @@ app_exportlogs
 ○ fail (invalid credentials)：  
 ```json
 {
-    "status": 404.
-    "message": "Email or Password is wrong",
+    "status": 404,
+    "message": "email or password is incorrect!",
 }
 ```
 
 ○ fail (missing params)：  
 ```json
 {
-    "status": 404.
-    "message": "Email and Passowrd must exist",
+    "status": 404,
+    "message": "email and passowrd must exist!",
 }
 ```
 

@@ -408,10 +408,16 @@ def update_token(request):
     email = request.POST.get('email')
     password = request.POST.get('password')
     if not email or not password:
-        return JsonResponse({'status':'email and password must exist!'})
+        return JsonResponse({
+            'status': 400, 
+            'message': 'email and password must exist!'
+            })
     user = models.Users.objects.filter(email=email, password_hash=password).first()
     if not user:
-        return JsonResponse({'stauts':'User or Password is wrong'})
+        return JsonResponse({
+            'status': 404, 
+            'message': 'email or password is incorrect!'
+            })
     token = models.Token.objects.filter(user_id=user.user_id).first()
     token.token = hashlib.sha256(os.urandom(32)).hexdigest()
     token.expired_at = timezone.now()+timezone.timedelta(days=1)
