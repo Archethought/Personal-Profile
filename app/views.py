@@ -1,6 +1,7 @@
 import re, os, hashlib, json, string
 from warnings import catch_warnings
 
+from rest_framework.decorators import api_view
 from django.shortcuts import render
 from django.http import JsonResponse, QueryDict
 from django.utils import timezone
@@ -10,6 +11,7 @@ from app import models
 REGEX_PATTERN = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"
 
 # use case 1: Register Function
+@api_view(['POST'])
 def register(request):
     if request.method != 'POST':
         return JsonResponse({'status':'post required'})
@@ -18,13 +20,15 @@ def register(request):
     handle = request.POST.get('handle')
     password = request.POST.get('password')
     biometrics = request.POST.get('biometrics')
+    # Drivers License
     public_private_key_pair = request.POST.get('public_private_key_pair')
+    if not email or not password:
+        return JsonResponse({'status':'email and password must exist!'})
     if not is_character_secure(password):
         return JsonResponse({'status': 'password must contain uppercase and lowercase letters, numbers, and special characters!'})
     if not re.search(REGEX_PATTERN, email):
         return JsonResponse({'status': 'email format error!'})
-    if not email or not password:
-        return JsonResponse({'status':'email and password must exist!'})
+
     user = models.Users.objects.filter(email=email).first()
     if user:
         return JsonResponse({'status':'the email exists!'})
@@ -54,6 +58,7 @@ def is_character_secure(password):
         return False
 
 # use case 2: Add_Credential Function
+@api_view(['POST'])
 def add_credential(request):
     if request.method != 'POST':
         return JsonResponse({'status':'post required'})
@@ -77,6 +82,7 @@ def add_credential(request):
         return JsonResponse({'credential_id':credential.credential_id, 'status':'success'})
 
 # use case 3: Add_Credential Function
+@api_view(['POST'])
 def share_create(request):
     if request.method != 'POST':
         return JsonResponse({'status':'post required'})
@@ -102,6 +108,7 @@ def share_create(request):
         share.save()
         return JsonResponse({'verification_token':verification_token, 'status':'success'})
 
+@api_view(['GET'])
 def get_share(request):
     if request.method != 'GET':
         return JsonResponse({'status':'get required'})
@@ -132,6 +139,7 @@ def get_share(request):
                 return JsonResponse({'user_data':share.info_field, 'status':'success'})
 
 # use case 4: Emergency_Access Function
+@api_view(['POST'])
 def emergency_access(request):
     if request.method != 'POST':
         return JsonResponse({'status':'post required'})
@@ -165,6 +173,7 @@ def emergency_access(request):
         return JsonResponse({'access_id':access.access_id, 'status':'success'})
 
 # use case 5: Emergency_Access_Grant Function
+@api_view(['POST'])
 def emergency_access_grant(request):
     if request.method != 'POST':
         return JsonResponse({'status':'post required'})
@@ -187,6 +196,7 @@ def emergency_access_grant(request):
     return JsonResponse({'emergency_info':emergency_info, 'status':'success'})
 
 # use case 6: Privilege_Rings Function
+@api_view(['POST'])
 def privilege_rings(request):
     if request.method != 'POST':
         return JsonResponse({'status':'post required'})
@@ -216,35 +226,76 @@ def privilege_rings(request):
         return JsonResponse({'ring_id':ring_id, 'status':'success'})
 
 # use case 7: Update_Info Function
+@api_view(['POST'])
 def update_info(request):
     if request.method != 'POST':
-        return JsonResponse({'status':'post required'})
-    queryDict = QueryDict(request.body)
-    token = queryDict.get('token')
-    token = models.Token.objects.filter(token=token).first()
+        return JsonResponse({'status': 'post required'})
+
+    token_value = request.POST.get('token')
+    if not token_value:
+        return JsonResponse({
+            'status':400,
+            'message':'token required'
+        })
+
+    # Find the token and ensure it hasn't expired
+    token = models.Token.objects.filter(token=token_value, expired_at__gt=timezone.now()).first()
     if not token:
-        return JsonResponse({'status':'token must exist!'})
-    elif token.expired_at <= timezone.now():
-        token.token = hashlib.sha256(os.urandom(32)).hexdigest()
-        token.expired_at = timezone.now() + timezone.timedelta(days=1)
-        token.save()
-        return JsonResponse({'status':'token has expired!'})
-    else:
-        updated_fields = queryDict.get('updated_fields')
-        if not updated_fields:
-            return JsonResponse({'status':'updated_fields must exist!'})
-        profile = models.Profiles.objects.filter(user_id=token.user_id).first()
-        if not profile:
-            return JsonResponse({'status':'this user’s profile does not exsit!'})
-        try:
-            updated_fields = json.loads(updated_fields)
-        except:
-                return JsonResponse({'status':' Json Decode Error!'})
-        profile.data = updated_fields
-        profile.save()
-        return JsonResponse({'status': 'success'})
+        return JsonResponse({
+            'status': 404,
+            'message':'invalid or expired token'
+        })
+
+    # Fetch the associated user using the user_id from the token
+    user = models.Users.objects.filter(user_id=token.user_id).first()
+    if not user:
+        return JsonResponse({
+            'status': 404,
+            'message':'user not found'
+        })
+
+    # Optional updates
+    name = request.POST.get('name')
+    # email = request.POST.get('email')
+    # handle = request.POST.get('handle')
+    # biometrics = request.POST.get('biometrics')
+    # public_private_key_pair = request.POST.get('public_private_key_pair')
+    password = request.POST.get('password')
+    data = request.POST.get('data')
+
+    # Update user fields if provided
+    if name:
+        user.name = name
+    if password:
+        if not is_character_secure(password):
+            return JsonResponse({
+                'status':400,
+                'message':'password must contain uppercase and lowercase letters, numbers, and special characters!'
+            })
+        user.password_hash = password  # Ideally hash this before saving
+
+    user.save()
+
+    # Update or create profile
+    profile = models.Profiles.objects.filter(user_id=user.user_id).first()
+    if data:
+        if profile:
+            profile.data = data
+            profile.save()
+        else:
+            profile = models.Profiles(user_id=user.user_id, data=data)
+            profile.save()
+
+    return JsonResponse({
+        'status': 200,
+        'user_id': user.user_id,
+        'profile_id': profile.profile_id if profile else None,
+        'message': 'success'
+    })
+
 
 # use case 8: Revoke_Access Function
+@api_view(['DELETE'])
 def revoke_access(request):
     if request.method != 'DELETE':
         return JsonResponse({'status':'delete required'})
@@ -270,6 +321,7 @@ def revoke_access(request):
         return JsonResponse({'status':'success'})
 
 # use case 10: Share_Create_Link Function
+@api_view(['POST'])
 def share_create_link(request):
     if request.method != 'POST':
         return JsonResponse({'status':'post required'})
@@ -296,6 +348,7 @@ def share_create_link(request):
         return JsonResponse({'access_link':access_link, 'status':'success'})
 
 # use case 11: Public Function
+@api_view(['POST'])
 def public(request):
     if request.method != 'POST':
         return JsonResponse({'status':'post required'})
@@ -321,6 +374,7 @@ def public(request):
         return JsonResponse({'public_profile_link':public_profile_link, 'status':'success'})
 
 # use case 19: Export Function
+@api_view(['POST'])
 def export(request):
     if request.method != 'POST':
         return JsonResponse({'status':'put required'})
@@ -335,11 +389,50 @@ def export(request):
         return JsonResponse({'status':'token has expired!'})
     else:
         p = models.Profiles.objects.filter(user_id=token.user_id).order_by('-updated_at').first()
+        u = models.Users.objects.filter(user_id=token.user_id).first().name
         data = p.data
-        exported_data = {'profile_id':p.profile_id, 'user_id':p.user.user_id,
-                         'data':data, 'created_at':p.created_at.strftime('%Y-%m-%d %H:%M'),
+        exported_data = {'profile_id':p.profile_id, 'user_id':p.user.user_id, 'full_name':u, 
+                         'data':json.loads(data), 'created_at':p.created_at.strftime('%Y-%m-%d %H:%M'),
                          'updated_at':p.updated_at.strftime('%Y-%m-%d %H:%M')}
         log = models.ExportLogs(user_id=token.user_id, export_format='json',
                 export_time=timezone.now(), exported_data=json.dumps(exported_data))
         log.save()
         return JsonResponse({'exported_data':exported_data, 'status':'success'})
+    
+   
+# use case 20: Update/Refresh token,
+@api_view(['POST'])
+def update_token(request):
+    if request.method != 'POST':
+        return JsonResponse({'status':'POST required'})
+    email = request.POST.get('email')
+    password = request.POST.get('password')
+    if not email or not password:
+        return JsonResponse({
+            'status': 400, 
+            'message': 'email and password must exist!'
+            })
+    user = models.Users.objects.filter(email=email, password_hash=password).first()
+    if not user:
+        return JsonResponse({
+            'status': 404, 
+            'message': 'email or password is incorrect!'
+            })
+    token = models.Token.objects.filter(user_id=user.user_id).first()
+    token.token = hashlib.sha256(os.urandom(32)).hexdigest()
+    token.expired_at = timezone.now()+timezone.timedelta(days=1)
+    token.save()
+
+    return JsonResponse({'status':200, 'message':'Token updated successfully!', 'token': token.token})
+
+# use case 21: check profile status
+@api_view(['POST'])
+def check_profile_status(request):
+    if request.method != 'POST':
+        return JsonResponse({'status':'post required'})
+    email = request.POST.get('email')
+    user = models.Users.objects.filter(email=email).first()
+    if not user:
+            return JsonResponse({'status': 404, 'message': 'Profile does not exist!'})
+    else:
+            return JsonResponse({'status':200, 'message':'Profile Exists!'})

@@ -20,7 +20,9 @@ from app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("api/v1/users/status", views.check_profile_status),
     path("api/v1/users/register", views.register),
+    path("api/v1/users/update_token", views.update_token),
     path("api/v1/profile/add-credential", views.add_credential),
     path("api/v1/profile/share-create", views.share_create),
     path("api/v1/profile/get-share", views.get_share),

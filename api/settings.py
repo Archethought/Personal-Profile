@@ -31,7 +31,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": os.getenv('DB_NAME', 'api'),
         "USER": os.getenv('DB_USER', 'root'),
-        "PASSWORD": os.getenv('DB_PASSWORD', 'Taidi1995!'),
+        "PASSWORD": os.getenv('DB_PASSWORD', 'Arche@2025!'),
         "HOST": os.getenv('DB_HOST', '127.0.0.1'),
         "PORT": os.getenv('DB_PORT', '3307'),
     }
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'app'
 ]
 
@@ -120,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Canada/Central'
+TIME_ZONE = 'America/Vancouver'
 
 USE_I18N = True
 
@@ -136,3 +137,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.openapi.AutoSchema',
+}
+
